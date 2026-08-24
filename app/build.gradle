@@ -1,0 +1,30 @@
+import java.util.Properties
+
+def config = new Properties()
+rootProject.file('app-config.properties').withInputStream { config.load(it) }
+
+def appName = config.getProperty('APP_NAME', 'My Web App').trim()
+def slug = appName.toLowerCase().replaceAll('[^a-z0-9]+', '').take(20)
+if (slug.isEmpty()) slug = 'webapp'
+
+def websiteUrl = config.getProperty('WEBSITE_URL', 'https://example.com').trim()
+
+android {
+    namespace 'com.website.apktemplate'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.website.apk.${slug}"
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+        resValue 'string', 'app_name', appName
+        resValue 'string', 'website_url', websiteUrl
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+}
