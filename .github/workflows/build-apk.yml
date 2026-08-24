@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'app-config.properties'
-      - 'app/src/main/res/drawable/app_icon.png'
+      - 'app-icon.base64'
   workflow_dispatch:
 
 permissions:
@@ -16,6 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Create launcher icon
+        shell: bash
+        run: |
+          mkdir -p app/src/main/res/drawable
+          base64 -d app-icon.base64 > app/src/main/res/drawable/app_icon.png
 
       - uses: actions/setup-java@v4
         with:
